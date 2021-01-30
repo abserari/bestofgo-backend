@@ -4,15 +4,20 @@
     "org": "silverswords",
     "tags": ["framework", "pub/sub"],
     "name": "Pulse",
-    "branch": "master",
-    "topics": ["framework", "pub/sub"]
+    "branch": "master"
   },
   {
     "repo": "abserari",
     "org": "abserari",
     "tags": ["profile", "github-readme"],
     "name": "Abserari",
-    "branch": "master",
-    "topics": ["profile"]
+    "branch": "master"
+  },
+  {
+    "repo": "go",
+    "org": "golang",
+    "tags": ["go", "language", "programming-language" ,"golang"],
+    "name": "Abserari",
+    "branch": "master"
   }
 ]
