@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
@@ -13,7 +14,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const token = "a61ee54b36249270b67d5f3b1ba867707c599c68"
+const token = "test"
 
 var (
 	nowTime = time.Now()
@@ -98,40 +99,45 @@ func main() {
 	// date
 	jsonfile.Date = time.Now().Format(time.RFC3339)
 
+	var wg sync.WaitGroup
+
 	for _, v := range listPro {
-		// tags
-		var Tags2Code = make(map[string]string)
-		for _, t := range v.Tags {
-			if Tags2Code[t] != "" {
-				continue
+		wg.Add(1)
+		go func(v OriginProject) {
+			log.Println("handle project", v.Repo)
+			defer wg.Done()
+			// get projects down
+			project, err := getProject(context.Background(), client, v.Org, v.Repo)
+			if err != nil {
+				log.Println(err, "jump this project")
+				return
 			}
-			Tags2Code[t] = t
-			jsonfile.Tags = append(jsonfile.Tags, Tag{Name: t, Code: t})
-		}
 
-		// get projects down
-		project, err := getProject(context.Background(), client, v.Org, v.Repo)
-		if err != nil {
-			log.Println(err, "jump this project")
-			continue
-		}
-		for _, v := range v.Tags {
-			var found bool
+			// tags
+			var Code2Tags = make(map[string]string)
+			for _, code := range v.Tags {
+				Code2Tags[code] = code
+			}
 			for _, t := range project.Tags {
-				if v == t {
-					found = true
-					break
-				}
+				Code2Tags[t] = t
 			}
-			if !found {
-				project.Tags = append(project.Tags, v)
+			for k, v := range Code2Tags {
+				jsonfile.Tags = append(jsonfile.Tags, Tag{Code: k, Name: v})
 			}
-		}
 
-		jsonfile.Projects = append(jsonfile.Projects, *project)
+			// projects
+			project.Tags = append(project.Tags, v.Tags...)
+			jsonfile.Projects = append(jsonfile.Projects, *project)
+		}(v)
 	}
 
+	wg.Wait()
+	log.Println("handle down")
+
 	data, err := json.Marshal(jsonfile)
+	if err != nil {
+		log.Println(err)
+	}
 	fp, err := os.OpenFile("./public/projects.json", os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		log.Fatal(err)
