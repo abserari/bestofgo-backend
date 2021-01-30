@@ -24,7 +24,8 @@ type Hero struct {
 }
 
 type OriginHero struct {
-	Login string `json:"login"`
+	Login    string   `json:"login"`
+	Projects []string `json:"projects"`
 }
 type OriginProject struct {
 	Repo   string   `json:"repo"`

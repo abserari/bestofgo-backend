@@ -13,7 +13,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const token = "your token"
+const token = "y"
 
 var (
 	nowTime = time.Now()
@@ -61,6 +61,7 @@ func main() {
 			continue
 		}
 
+		hero.Projects = v.Projects
 		jsonHero.Heroes = append(jsonHero.Heroes, *hero)
 	}
 
@@ -81,7 +82,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	return
 	raw, err := LoadFile("./public/list-projects.json")
 	if err != nil {
 		log.Println(err)

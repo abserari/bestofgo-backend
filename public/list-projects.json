@@ -19,5 +19,11 @@
     "tags": ["go", "language", "programming-language" ,"golang"],
     "name": "Abserari",
     "branch": "master"
+  },
+  {
+    "repo": "perkeep",
+    "org": "perkeep",
+    "tags": [],
+    "name": "Perkeep"
   }
 ]

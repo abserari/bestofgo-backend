@@ -62,11 +62,11 @@ func getStarsTrending(ctx context.Context, client *github.Client, project *Proje
 			return err
 		}
 		stars = append(stars, stargazers...)
+		// todo: make client pool or snap or graphql to solve this ratelimit and slowly call problem
 		if resp.NextPage == 0 || resp.NextPage > 10 {
 			break
 		}
 		page = resp.NextPage
-		log.Println("next page: ", page)
 	}
 
 	for _, v := range stars {
