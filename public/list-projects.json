@@ -2,7 +2,7 @@
   {
     "repo": "pulse",
     "org": "silverswords",
-    "tags": ["framework", "pub/sub"],
+    "tags": [],
     "name": "Pulse",
     "branch": "master"
   },
@@ -25,5 +25,29 @@
     "org": "perkeep",
     "tags": [],
     "name": "Perkeep"
+  },
+  {
+    "repo": "kubernetes",
+    "org": "kubernetes",
+    "tags": [],
+    "name": "Kubernetes"
+  },
+  {
+    "repo": "moby",
+    "org": "moby",
+    "tags": [],
+    "name": "moby"
+  },
+   {
+    "repo": "dapr",
+    "org": "dapr",
+    "tags": [],
+    "name": "Dapr"
+  },
+  {
+    "repo": "istio",
+    "org": "istio",
+    "tags": [],
+    "name": "Istio"
   }
 ]
