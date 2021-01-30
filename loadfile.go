@@ -22,3 +22,15 @@ func UnmarshalListProjects(data []byte) ([]OriginProject, error) {
 
 	return OriginProjects, nil
 }
+
+//  UnmarshalListHeroes -
+func UnmarshalListHeroes(data []byte) ([]OriginHero, error) {
+	var OriginHeroes []OriginHero
+
+	err := json.Unmarshal(data, &OriginHeroes)
+	if err != nil {
+		return nil, err
+	}
+
+	return OriginHeroes, nil
+}

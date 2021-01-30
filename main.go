@@ -7,12 +7,13 @@ import (
 	"time"
 
 	jsoniter "github.com/json-iterator/go"
+	"github.com/shurcooL/githubv4"
 
 	"github.com/google/go-github/v33/github"
 	"golang.org/x/oauth2"
 )
 
-const token = "f9bdb40455a4e5f43d2c221620aeddfa7a789706"
+const token = "your token"
 
 var (
 	nowTime = time.Now()
@@ -36,8 +37,51 @@ func main() {
 	tc := oauth2.NewClient(ctx, ts)
 
 	client := github.NewClient(tc)
-	// clientv4 := githubv4.NewClient(httpClient)
+	clientv4 := githubv4.NewClient(tc)
 
+	rawHeroList, err := LoadFile("./public/list-hof.json")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	listHero, err := UnmarshalListHeroes(rawHeroList)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	var jsonHero = &HeroFile{}
+	jsonHero.Date = time.Now().Format(time.RFC3339)
+
+	for _, v := range listHero {
+		hero, err := getHero(ctx, clientv4, v.Login)
+		if err != nil {
+			log.Println("jump this man")
+			continue
+		}
+
+		jsonHero.Heroes = append(jsonHero.Heroes, *hero)
+	}
+
+	dataHero, err := json.Marshal(jsonHero)
+	if err != nil {
+		log.Println("hero file marshal failed")
+		return
+	}
+
+	heroFp, err := os.OpenFile("./public/hof.json", os.O_RDWR|os.O_CREATE, 0755)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer heroFp.Close()
+	_, err = heroFp.Write(dataHero)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return
 	raw, err := LoadFile("./public/list-projects.json")
 	if err != nil {
 		log.Println(err)
@@ -71,7 +115,18 @@ func main() {
 			log.Println(err, "jump this project")
 			continue
 		}
-		project.Tags = append(project.Tags, v.Tags...)
+		for _, v := range v.Tags {
+			var found bool
+			for _, t := range project.Tags {
+				if v == t {
+					found = true
+					break
+				}
+			}
+			if !found {
+				project.Tags = append(project.Tags, v)
+			}
+		}
 
 		jsonfile.Projects = append(jsonfile.Projects, *project)
 	}

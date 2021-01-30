@@ -1,5 +1,31 @@
 package main
 
+type JSONFile struct {
+	Date     string    `json:"date"`
+	Tags     []Tag     `json:"tags"`
+	Projects []Project `json:"projects"`
+}
+
+type HeroFile struct {
+	Date   string `json:"date"`
+	Heroes []Hero `json:"heroes"`
+}
+
+type Hero struct {
+	Username  string   `json:"username"`
+	Avatar    string   `json:"avatar"`
+	Followers int      `json:"followers"`
+	Blog      string   `json:"blog"`
+	Name      string   `json:"name"`
+	Projects  []string `json:"projects"`
+	Bio       string   `json:"bio"`
+	Npm       string   `json:"npm"`
+	Modules   int      `json:"modules"`
+}
+
+type OriginHero struct {
+	Login string `json:"login"`
+}
 type OriginProject struct {
 	Repo   string   `json:"repo"`
 	Org    string   `json:"org"`
@@ -11,12 +37,6 @@ type OriginProject struct {
 type Tag struct {
 	Name string `json:"name"`
 	Code string `json:"code"`
-}
-
-type JSONFile struct {
-	Date     string    `json:"date"`
-	Tags     []Tag     `json:"tags"`
-	Projects []Project `json:"projects"`
 }
 
 // Project -
